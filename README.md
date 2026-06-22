@@ -4,27 +4,29 @@ Pipeline de Machine Learning para identificar transações fraudulentas em um da
 extremamente desbalanceado, usando o dataset [Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud)
 (mlg-ulb), disponível no Kaggle.
 
-O dataset contém transações de cartões de crédito europeus registradas em setembro de 2013.
-Das 284.807 transações, apenas 492 (0,17%) são fraudulentas. O objetivo do projeto é construir
-um modelo capaz de identificar essas fraudes sem gerar um volume inviável de falsos alarmes.
+O dataset original contém 284.807 transações de cartões de crédito europeus registradas em
+setembro de 2013, das quais 492 (0,17%) são fraudulentas. A execução deste projeto foi feita
+sobre uma amostra de 17.918 transações, das quais 81 são fraudulentas (0,45%), mantendo o
+mesmo desafio de desbalanceamento extremo entre as classes. O objetivo é construir um modelo
+capaz de identificar essas fraudes sem gerar um volume inviável de falsos alarmes.
 
 ## Resultados
 
-Avaliação no conjunto de teste (56.746 transações, 95 fraudes):
+Avaliação no conjunto de teste (3.584 transações, 16 fraudes):
 
 | Modelo                                  | Precision (fraude) | Recall (fraude) | F1-score (fraude) |
 |------------------------------------------|:---:|:---:|:---:|
-| Regressão Logística (baseline)           | 0,056 | 0,874 | 0,106 |
-| Random Forest (class_weight)             | 0,885 | 0,726 | 0,798 |
-| Random Forest + SMOTE                    | 0,738 | 0,800 | 0,768 |
-| Random Forest + threshold ajustado       | 0,892 | 0,779 | 0,832 |
+| Regressão Logística (baseline)           | 0,250 | 1,000 | 0,400 |
+| Random Forest (class_weight)             | 0,882 | 0,938 | 0,909 |
+| Random Forest + SMOTE                    | 0,800 | 1,000 | 0,889 |
+| Random Forest + threshold ajustado       | 0,938 | 0,938 | 0,938 |
 
-A acurácia não é usada como métrica de avaliação porque, com 99,8% das transações concentradas
-em uma única classe, ela não diferencia um bom modelo de um modelo que simplesmente prevê
-"não fraude" sempre. A métrica usada para comparar os modelos é a PR-AUC (Precision-Recall
-AUC), mais adequada do que ROC-AUC quando as classes são tão desbalanceadas. O melhor resultado
-final foi obtido com a Random Forest após ajuste do threshold de decisão, otimizado para
-maximizar o F1-score sobre a classe de fraude.
+A acurácia não é usada como métrica de avaliação porque, com mais de 99% das transações
+concentradas em uma única classe, ela não diferencia um bom modelo de um modelo que
+simplesmente prevê "não fraude" sempre. A métrica usada para comparar os modelos é a PR-AUC
+(Precision-Recall AUC), mais adequada do que ROC-AUC quando as classes são tão desbalanceadas.
+O melhor resultado final foi obtido com a Random Forest após ajuste do threshold de decisão,
+chegando a 93,8% de precisão e 93,8% de recall sobre a classe de fraude.
 
 ## Estrutura do notebook
 
@@ -85,7 +87,10 @@ kaggle datasets download -d mlg-ulb/creditcardfraud
 unzip creditcardfraud.zip
 ```
 
-Coloque o `creditcard.csv` na raiz do repositório, na mesma pasta do notebook.
+Coloque o `creditcard.csv` na raiz do repositório, na mesma pasta do notebook. Os resultados
+reportados acima foram obtidos com uma amostra de 17.918 linhas do dataset original; usando o
+arquivo completo (284.807 linhas) os números podem variar um pouco, mas a tendência entre os
+modelos se mantém.
 
 Se o arquivo não for encontrado, o notebook gera automaticamente um dataset sintético
 equivalente apenas para demonstrar o pipeline de ponta a ponta. Nesse caso os resultados são
